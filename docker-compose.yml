@@ -1,14 +1,5 @@
 version: '3.9'
 services:
-  app:
-    build:
-      context: .
-      dockerfile: ./docker/app/Dockerfile
-    ports:
-      - "3333:8080"
-    volumes:
-      - ./src/:/go/src
-    tty: true
   db:
     build:
       context: .
@@ -26,9 +17,23 @@ services:
     volumes:
       - ./docker/mysql/initdb.d:/docker-entrypoint-initdb.d
       - ./docker/mysql/conf.d:/etc/mysql/conf.d
+  app:
+    build:
+      context: .
+      dockerfile: ./docker/app/Dockerfile
+    ports:
+      - "3333:8080"
+    volumes:
+      - ./src/:/go/src
+    depends_on:
+      - db
+    stdin_open: true
+    tty: true
   redis:
     image: "redis:latest"
     ports:
       - "6379:6379"
     volumes:
       - "./data/redis:/data"
+    depends_on:
+      - app
