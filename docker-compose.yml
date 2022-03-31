@@ -1,0 +1,11 @@
+version: '3.9'
+services:
+  app:
+    build:
+      context: .
+      dockerfile: ./docker/app/Dockerfile
+    ports:
+      - "3333:8080"
+    volumes:
+      - ./src/:/go/src
+    tty: true
