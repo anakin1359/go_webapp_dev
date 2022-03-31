@@ -9,3 +9,26 @@ services:
     volumes:
       - ./src/:/go/src
     tty: true
+  db:
+    build:
+      context: .
+      dockerfile: ./docker/mysql/Dockerfile
+    image: mysql:8.0
+    restart: always
+    environment:
+      MYSQL_DATABASE: prototype
+      MYSQL_USER: user
+      MYSQL_PASSWORD: password
+      MYSQL_ROOT_PASSWORD: password
+      TZ: 'Asia/Tokyo'
+    ports:
+      - "3306:3306"
+    volumes:
+      - ./docker/mysql/initdb.d:/docker-entrypoint-initdb.d
+      - ./docker/mysql/conf.d:/etc/mysql/conf.d
+  redis:
+    image: "redis:latest"
+    ports:
+      - "6379:6379"
+    volumes:
+      - "./data/redis:/data"
